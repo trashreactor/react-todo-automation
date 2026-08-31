@@ -31,6 +31,17 @@ npm run report       # open the last HTML report
 - Multiple todos stay independent — completing or deleting one doesn't affect the
   others, and the list count reflects what's left.
 
+## Structure
+
+- `pages/TodoPage.ts` — Page Object for the to-do list, wrapping its locators and
+  actions (`addTodo`, `toggle`, `delete`, ...).
+- `fixtures.ts` — extends Playwright's `test` with a `todoPage` fixture that
+  constructs `TodoPage` and navigates to the app, so specs consume it as
+  `test('...', async ({ todoPage }) => { ... })`.
+- `tests/todo.spec.ts` — the specs, each broken into named `test.step()`s so the
+  HTML report reads step-by-step (e.g. "add a todo" → "mark it complete" → "delete
+  it") instead of one flat trace.
+
 ## CI reports
 
 The weekly "Nightly E2E Tests" workflow (`.github/workflows/qa-e2e-nightly.yml`)

@@ -1,46 +1,47 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from '../fixtures'
 
-test.beforeEach(async ({ page }) => {
-  await page.goto('/')
+test('shows an empty state with no todos', async ({ todoPage }) => {
+  await expect(todoPage.emptyState).toBeVisible()
 })
 
-test('shows an empty state with no todos', async ({ page }) => {
-  await expect(page.getByText('No todos yet — add one above.')).toBeVisible()
+test('adds, completes, and deletes a todo', async ({ todoPage }) => {
+  await test.step('add a todo', async () => {
+    await todoPage.addTodo('Buy milk')
+    await expect(todoPage.item('Buy milk')).toBeVisible()
+    await expect(todoPage.itemsLeftText(1)).toBeVisible()
+  })
+
+  await test.step('mark it complete', async () => {
+    await todoPage.toggle('Buy milk')
+    await expect(todoPage.item('Buy milk').locator('span')).toHaveCSS(
+      'text-decoration-line',
+      'line-through',
+    )
+    await expect(todoPage.itemsLeftText(0)).toBeVisible()
+  })
+
+  await test.step('delete it', async () => {
+    await todoPage.delete('Buy milk')
+    await expect(todoPage.emptyState).toBeVisible()
+  })
 })
 
-test('adds, completes, and deletes a todo', async ({ page }) => {
-  await page.getByLabel('New todo').fill('Buy milk')
-  await page.getByRole('button', { name: 'Add' }).click()
+test('keeps todos independent of each other', async ({ todoPage }) => {
+  await test.step('add two todos', async () => {
+    await todoPage.addTodo('Buy milk')
+    await todoPage.addTodo('Walk the dog')
+    await expect(todoPage.itemsLeftText(2)).toBeVisible()
+  })
 
-  const item = page.getByRole('listitem').filter({ hasText: 'Buy milk' })
-  await expect(item).toBeVisible()
-  await expect(page.getByText('1 item left')).toBeVisible()
+  await test.step('complete one, leave the other untouched', async () => {
+    await todoPage.toggle('Buy milk')
+    await expect(todoPage.itemsLeftText(1)).toBeVisible()
+    await expect(todoPage.item('Walk the dog')).toBeVisible()
+  })
 
-  await item.getByRole('checkbox').check()
-  await expect(item.locator('span')).toHaveCSS('text-decoration-line', 'line-through')
-  await expect(page.getByText('0 items left')).toBeVisible()
-
-  await item.getByRole('button', { name: 'Delete' }).click()
-  await expect(page.getByText('No todos yet — add one above.')).toBeVisible()
-})
-
-test('keeps todos independent of each other', async ({ page }) => {
-  for (const text of ['Buy milk', 'Walk the dog']) {
-    await page.getByLabel('New todo').fill(text)
-    await page.getByRole('button', { name: 'Add' }).click()
-  }
-
-  await expect(page.getByText('2 items left')).toBeVisible()
-
-  await page.getByRole('listitem').filter({ hasText: 'Buy milk' }).getByRole('checkbox').check()
-  await expect(page.getByText('1 item left')).toBeVisible()
-  await expect(page.getByRole('listitem').filter({ hasText: 'Walk the dog' })).toBeVisible()
-
-  await page
-    .getByRole('listitem')
-    .filter({ hasText: 'Buy milk' })
-    .getByRole('button', { name: 'Delete' })
-    .click()
-  await expect(page.getByRole('listitem')).toHaveCount(1)
-  await expect(page.getByText('Walk the dog')).toBeVisible()
+  await test.step('delete the completed one', async () => {
+    await todoPage.delete('Buy milk')
+    await expect(todoPage.page.getByRole('listitem')).toHaveCount(1)
+    await expect(todoPage.item('Walk the dog')).toBeVisible()
+  })
 })
