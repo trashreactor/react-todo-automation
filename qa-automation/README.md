@@ -30,3 +30,9 @@ npm run report       # open the last HTML report
   it, checking the "N item(s) left" count throughout.
 - Multiple todos stay independent — completing or deleting one doesn't affect the
   others, and the list count reflects what's left.
+
+## CI reports
+
+The weekly "Nightly E2E Tests" workflow (`.github/workflows/qa-e2e-nightly.yml`)
+publishes this suite's HTML report to GitHub Pages after every run, pass or fail:
+https://trashreactor.github.io/react-todo-automation/
