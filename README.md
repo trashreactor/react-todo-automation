@@ -4,8 +4,11 @@ A minimal to-do list app used as an automation/testing exercise: a small React U
 a matching test suite, and a CI workflow that runs it.
 
 - **App**: add a to-do, mark it complete, delete it. Vite + React + TypeScript.
-- **Tests**: Vitest + React Testing Library, run in jsdom.
-- **CI**: GitHub Actions runs lint, tests, and a production build on every push/PR to `main`.
+- **Unit/component tests**: Vitest + React Testing Library, run in jsdom.
+- **E2e tests**: Playwright, under [`qa-automation/`](./qa-automation), run against a real
+  browser and the built app.
+- **CI**: GitHub Actions runs lint, unit tests, the build, and the e2e suite on every
+  push/PR to `main`.
 
 ## Running the app locally
 
@@ -39,3 +42,8 @@ npm run test:watch  # re-runs on file changes, for local development
 npm run build  # type-check (tsc -b) and produce a production build
 npm run lint   # oxlint
 ```
+
+## E2e tests (Playwright)
+
+See [`qa-automation/README.md`](./qa-automation/README.md) for how to run the Playwright
+suite locally and what it covers.
