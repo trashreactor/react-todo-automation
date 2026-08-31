@@ -1,32 +1,14 @@
-name: CI
+name: QA E2E Tests Gate
 
 on:
-  push:
   pull_request:
     types: [closed]
     branches: [main]
 
 jobs:
-  dev-tests-gate:
-    name: Dev Tests Gate
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test
-      - run: npm run build
-
   qa-e2e-tests-gate:
     name: QA E2E Tests Gate
-    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

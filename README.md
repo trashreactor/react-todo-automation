@@ -1,7 +1,7 @@
 # React To-Do List
 
 A minimal to-do list app used as an automation/testing exercise: a small React UI,
-a matching test suite, and a CI workflow that runs it.
+a matching test suite, and CI workflows that run it.
 
 - **App**: add a to-do, mark it complete, delete it. Vite + React + TypeScript.
 - **Unit/component tests**: Vitest + React Testing Library, run in jsdom.
