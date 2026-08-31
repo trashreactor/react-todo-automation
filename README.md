@@ -7,8 +7,9 @@ a matching test suite, and a CI workflow that runs it.
 - **Unit/component tests**: Vitest + React Testing Library, run in jsdom.
 - **E2e tests**: Playwright, under [`qa-automation/`](./qa-automation), run against a real
   browser and the built app.
-- **CI**: GitHub Actions runs lint, unit tests, the build, and the e2e suite on every
-  push/PR to `main`.
+- **CI**: two GitHub Actions gates — **Dev Tests Gate** (lint, unit tests, build) runs on
+  every commit pushed to any branch; **QA E2E Tests Gate** (the Playwright suite) runs
+  when a PR is merged into `main`.
 
 ## Running the app locally
 
