@@ -5,43 +5,48 @@ test('shows an empty state with no todos', async ({ todoPage }) => {
 })
 
 test('adds, completes, and deletes a todo', async ({ todoPage }) => {
+  const text = 'Buy milk'
+  
   await test.step('add a todo', async () => {
-    await todoPage.addTodo('Buy milk')
-    await expect(todoPage.item('Buy milk')).toBeVisible()
+    await todoPage.addTodo(text)
+    await expect(todoPage.item(text)).toBeVisible()
     await expect(todoPage.itemsLeftText(1)).toBeVisible()
   })
 
-  await test.step('mark it complete', async () => {
-    await todoPage.toggle('Buy milk')
-    await expect(todoPage.item('Buy milk').locator('span')).toHaveCSS(
+  await test.step(`mark "${{ext}" complete`, async () => {
+    await todoPage.toggle(text)
+    await expect(todoPage.item(text).locator('span')).toHaveCSS(
       'text-decoration-line',
       'line-through',
     )
     await expect(todoPage.itemsLeftText(0)).toBeVisible()
   })
 
-  await test.step('delete it', async () => {
+  await test.step(`delete "${{ext}"`, async () => {
     await todoPage.delete('Buy milk')
     await expect(todoPage.emptyState).toBeVisible()
   })
 })
 
 test('keeps todos independent of each other', async ({ todoPage }) => {
+  const text1 = 'Buy milk'
+  const text2 = 'Walk the dog'
+  
   await test.step('add two todos', async () => {
-    await todoPage.addTodo('Buy milk')
-    await todoPage.addTodo('Walk the dog')
+    await todoPage.addTodo(text1)
+    await todoPage.addTodo(text2)
     await expect(todoPage.itemsLeftText(2)).toBeVisible()
   })
 
   await test.step('complete one, leave the other untouched', async () => {
-    await todoPage.toggle('Buy milk')
+    await todoPage.toggle(text1)
     await expect(todoPage.itemsLeftText(1)).toBeVisible()
-    await expect(todoPage.item('Walk the dog')).toBeVisible()
+    await expect(todoPage.item(text2)).toBeVisible()
   })
 
   await test.step('delete the completed one', async () => {
-    await todoPage.delete('Buy milk')
+    await todoPage.delete(text1)
     await expect(todoPage.page.getByRole('listitem')).toHaveCount(1)
-    await expect(todoPage.item('Walk the dog')).toBeVisible()
+    await expect(todoPage.item(text2)).toBeVisible()
   })
 })
