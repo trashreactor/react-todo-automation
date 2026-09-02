@@ -7,9 +7,12 @@ a matching test suite, and CI workflows that run it.
 - **Unit/component tests**: Vitest + React Testing Library, run in jsdom.
 - **E2e tests**: Playwright, under [`qa-automation/`](./qa-automation), run against a real
   browser and the built app.
-- **CI**: three GitHub Actions workflows — **Dev Tests Gate** (lint, unit tests, build)
-  runs on every commit pushed to any branch; **QA E2E Tests Gate** (the Playwright suite)
-  runs when a PR is merged into `main`; **Nightly E2E Tests** runs the same Playwright
+- **CI**: three GitHub Actions workflows
+  - **Dev Tests Gate** (lint, unit tests, build)
+  runs on every commit pushed to any branch;
+  - **QA E2E Tests Gate** (the Playwright suite)
+  runs when a PR is merged into `main`;
+  - **Nightly E2E Tests** runs the same Playwright
   suite on a weekly schedule (Sundays) and can also be triggered manually. The nightly
   run's HTML report is published to GitHub Pages at
   https://trashreactor.github.io/react-todo-automation/.
